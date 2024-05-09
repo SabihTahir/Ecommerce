@@ -3,7 +3,7 @@
 import Helmet from "../Components/Helmet/Helmet";
 import CommonSection from "../Components/UI/CommonSection";
 import { motion } from "framer-motion";
-import { deleteItem } from '../Slices/cartSlice';
+import { deleteItem } from "../Slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -59,16 +59,26 @@ const Cart = () => {
                 <h1 className="text-lg font-bold">Subtotal: </h1>
                 <h1 className="text-lg font-semibold">${totalAmount}</h1>
               </div>
-              <p className="text-lg font-medium">Taxes and shipping will calculate in checkout</p>
+              <p className="text-lg font-medium">
+                Taxes and shipping will calculate in checkout
+              </p>
               <div className="flex items-center gap-4">
                 <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => navigate("/shop")} className="bg-[var(--primary-color)]
-                text-white border border-[var(--primary-color)] hover:bg-white hover:text-[var(--primary-color)] py-3 px-4 rounded-lg">Continue Shopping</motion.button>
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => navigate("/shop")}
+                  className="bg-[var(--primary-color)]
+                text-white border border-[var(--primary-color)] hover:bg-white hover:text-[var(--primary-color)] py-3 px-4 rounded-lg"
+                >
+                  Continue Shopping
+                </motion.button>
                 <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => navigate("/checkout")} className="hover:bg-[var(--primary-color)]
-                hover:text-white border border-[var(--primary-color)] bg-white text-[var(--primary-color)] py-3 px-4 rounded-lg">Checkout</motion.button>
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => navigate("/checkout")}
+                  className="hover:bg-[var(--primary-color)]
+                hover:text-white border border-[var(--primary-color)] bg-white text-[var(--primary-color)] py-3 px-4 rounded-lg"
+                >
+                  Checkout
+                </motion.button>
               </div>
             </div>
           </div>
@@ -83,7 +93,7 @@ const Tr = ({ item }) => {
   const deleteProduct = () => {
     dispatch(deleteItem(item.id));
     toast.success("Item deleted from cart successfully");
-  }
+  };
   return (
     <tr className="odd:bg-white  even:bg-gray-50 ">
       <th
