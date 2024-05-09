@@ -1,19 +1,30 @@
 /* eslint-disable react/no-unknown-property */
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/eco-logo.png";
 import profilePic from "../../assets/images/user-icon.png";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(false);
   const [changeIcon, setChangeIcon] = useState(false);
   const handleMobileMenu = () => {
     setOpen(!open);
     setChangeIcon(!changeIcon);
   };
 
+  const handleProfileMenu = () => {
+    setProfileMenu(!profileMenu);
+  }
+
+  const navigate = useNavigate();
+
   const headerRef = useRef(null);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+
 
   const stickyHeaderFunc = () => {
     window.addEventListener("scroll", () => {
@@ -95,7 +106,10 @@ const Header = () => {
                   1
                 </span>
               </div>
-              <div className="relative">
+              <motion.div
+              whileTap={{ scale: 0.9 }}
+              onClick={() => navigate("/cart")}
+              className="relative cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -111,17 +125,31 @@ const Header = () => {
                   />
                 </svg>
                 <span className="absolute -top-1 -right-1 rounded-full bg-red-500 text-white text-xs w-3 h-3 flex items-center justify-center">
-                  1
+                  {totalQuantity}
                 </span>
-              </div>
+              </motion.div>
               {/* Profile */}
-              <div className="rounded-full w-8 h-8">
+              <div 
+              onClick={handleProfileMenu}
+              className="rounded-full w-8 h-8 relative">
                 <motion.img
                   whileTap={{ scale: 1.2 }}
                   src={profilePic}
                   alt=""
                   className="img-fluid cursor-pointer"
                 />
+                <motion.div
+                animate={{ x: profileMenu ? 0 : 50 }}
+                className={`${profileMenu ? "block" : "hidden"} absolute top-14 right-1 border border-[var(--primary-color)] py-2 px-8 rounded-lg shadow-sm bg-white`}>
+                    <ul className="flex flex-col gap-3 text-lg">
+                        <li>
+                          <Link to="#">Profile</Link>
+                        </li>
+                        <li>
+                          <Link to="#">Logout</Link>
+                        </li>
+                    </ul>
+                </motion.div>
               </div>
               {/* Icon for Mobile menu */}
               <motion.div
