@@ -6,6 +6,7 @@ import Signup from "../Pages/Signup";
 import Cart from "../Pages/Cart";
 import Checkout from "../Pages/Checkout";
 import ProductDetails from "../Pages/ProductDetails";
+import { ProtectedRoute } from "./ProtectedRoute";
 const Router = () => {
   return (
     <Routes>
@@ -14,7 +15,14 @@ const Router = () => {
       <Route path="shop" element={<Shop />} />
       <Route path="shop/:id" element={<ProductDetails />} />
       <Route path="cart" element={<Cart />} />
-      <Route path="checkout" element={<Checkout />} />
+      <Route
+        path="checkout"
+        element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }
+      />
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<Signup />} />
     </Routes>

@@ -6,11 +6,17 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import userAuth from "../../Custom-hooks/UserAuth";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase.config";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const [profileMenu, setProfileMenu] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(true);
   const [changeIcon, setChangeIcon] = useState(false);
+
+  const { currentUser } = userAuth();
   const handleMobileMenu = () => {
     setOpen(!open);
     setChangeIcon(!changeIcon);
@@ -18,13 +24,13 @@ const Header = () => {
 
   const handleProfileMenu = () => {
     setProfileMenu(!profileMenu);
-  }
+    console.log(profileMenu);
+  };
 
   const navigate = useNavigate();
 
   const headerRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-
 
   const stickyHeaderFunc = () => {
     window.addEventListener("scroll", () => {
@@ -41,6 +47,16 @@ const Header = () => {
         headerRef.current.classList.remove("bg-[#fdefe6]");
       }
     });
+  };
+
+  const handleLogout = () => {
+    try {
+      signOut(auth);
+      toast.success("Logout Successful");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -107,9 +123,10 @@ const Header = () => {
                 </span>
               </div>
               <motion.div
-              whileTap={{ scale: 0.9 }}
-              onClick={() => navigate("/cart")}
-              className="relative cursor-pointer">
+                whileTap={{ scale: 0.9 }}
+                onClick={() => navigate("/cart")}
+                className="relative cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -129,26 +146,56 @@ const Header = () => {
                 </span>
               </motion.div>
               {/* Profile */}
-              <div 
-              onClick={handleProfileMenu}
-              className="rounded-full w-8 h-8 relative">
-                <motion.img
-                  whileTap={{ scale: 1.2 }}
-                  src={profilePic}
-                  alt=""
-                  className="img-fluid cursor-pointer"
-                />
+              <div
+                onClick={handleProfileMenu}
+                className="rounded-full w-8 h-8 relative"
+              >
+                <div className="flex items-center gap-2">
+                  <motion.img
+                    whileTap={{ scale: 1.2 }}
+                    src={
+                      currentUser
+                        ? currentUser.photoURL
+                          ? currentUser.photoURL
+                          : profilePic
+                        : profilePic
+                    }
+                    alt=""
+                    className="img-fluid cursor-pointer"
+                  />
+                  {currentUser ? (
+                    <span className="font-medium capitalize">
+                      {currentUser.displayName}
+                    </span>
+                  ) : null}
+                </div>
                 <motion.div
-                animate={{ x: profileMenu ? 0 : 50 }}
-                className={`${profileMenu ? "block" : "hidden"} absolute top-14 right-1 border border-[var(--primary-color)] py-2 px-8 rounded-lg shadow-sm bg-white`}>
+                  animate={{ x: profileMenu ? [0, 100] : [100, 0] }}
+                  className={`${
+                    profileMenu ? "hidden" : "block"
+                  } absolute top-14 right-1 border border-[var(--primary-color)] py-2 px-8 rounded-lg shadow-sm bg-white z-50`}
+                >
+                  {currentUser ? (
+                    <span
+                      onClick={handleLogout}
+                      className="text-lg cursor-pointer"
+                    >
+                      Logout
+                    </span>
+                  ) : (
                     <ul className="flex flex-col gap-3 text-lg">
-                        <li>
-                          <Link to="#">Profile</Link>
-                        </li>
-                        <li>
-                          <Link to="#">Logout</Link>
-                        </li>
+                      <li>
+                        <Link to="/login" className="cursor-pointer">
+                          LogIn
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/signup" className="cursor-pointer">
+                          SignUp
+                        </Link>
+                      </li>
                     </ul>
+                  )}
                 </motion.div>
               </div>
               {/* Icon for Mobile menu */}
