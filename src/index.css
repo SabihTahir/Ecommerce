@@ -1,11 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 
 :root {
   --card-bg-01: #fdefe6;
@@ -23,8 +20,9 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
-.active{
-  @apply text-blue-500;
+.active {
+  @apply text-[var(--primary-color)];
+  @apply font-medium;
 }
 
 ::-webkit-scrollbar-thumb {

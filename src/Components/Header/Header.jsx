@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/eco-logo.png";
 import profilePic from "../../assets/images/user-icon.png";
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import userAuth from "../../Custom-hooks/UserAuth";
@@ -29,25 +29,7 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const headerRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-
-  const stickyHeaderFunc = () => {
-    window.addEventListener("scroll", () => {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
-        headerRef.current.classList.add("sticky");
-        headerRef.current.classList.add("bg-[#fdefe6]");
-        headerRef.current.classList.remove("bg-white");
-      } else {
-        headerRef.current.classList.remove("sticky");
-        headerRef.current.classList.add("bg-white");
-        headerRef.current.classList.remove("bg-[#fdefe6]");
-      }
-    });
-  };
 
   const handleLogout = () => {
     try {
@@ -59,14 +41,9 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    stickyHeaderFunc();
-    return () => window.removeEventListener("scroll", stickyHeaderFunc);
-  }, []);
-
   return (
     <>
-      <nav ref={headerRef} className="bg-white shadow-sm py-3 top-0 z-50">
+      <nav className="bg-white shadow-md py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto xl:px-0 px-3">
           <motion.div
             whileInView={{ opacity: [0, 1] }}
